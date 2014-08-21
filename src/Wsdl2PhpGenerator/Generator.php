@@ -8,6 +8,7 @@ namespace Wsdl2PhpGenerator;
 use \Exception;
 use Psr\Log\LoggerInterface;
 use Wsdl2PhpGenerator\Xml\WsdlDocument;
+use Wsdl2PhpGenerator\Xml\TypeNode;
 
 /**
  * Class that contains functionality for generating classes from a wsdl file
@@ -139,7 +140,8 @@ class Generator implements GeneratorInterface
                 $type->setDescription($typeNode->getDocumentation());
 
                 foreach ($typeNode->getParts() as $name => $typeName) {
-                    $type->addMember($typeName, $name, $typeNode->isElementNillable($name));
+                    $memberDescription = $typeNode->getMemberDocumentation($name);
+                    $type->addMember($typeName, $name, $typeNode->isElementNillable($name), $memberDescription);
                 }
             } elseif ($enumValues = $typeNode->getEnumerations()) {
                 $type = new Enum($this->config, $typeNode->getName(), $typeNode->getRestriction());

@@ -109,6 +109,7 @@ class ComplexType extends Type
             $comment = new PhpDocComment();
             $comment->setVar(PhpDocElementFactory::getVar($type, $name, ''));
             $comment->setAccess(PhpDocElementFactory::getPublicAccess());
+            $comment->setDescription($member->getDescription());
             $var = new PhpVariable('public', $name, 'null', $comment);
             $class->addVariable($var);
 
@@ -176,10 +177,11 @@ class ComplexType extends Type
      * @param string $type
      * @param string $name
      * @param bool $nillable
+     * @param string $description
      */
-    public function addMember($type, $name, $nillable)
+    public function addMember($type, $name, $nillable, $description = null)
     {
-        $this->members[$name] = new Variable($type, $name, $nillable);
+        $this->members[$name] = new Variable($type, $name, $nillable, $description);
     }
 
     /**

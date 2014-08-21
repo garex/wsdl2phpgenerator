@@ -198,6 +198,24 @@ class TypeNode extends DocumentedNode
     }
 
     /**
+     * Returns member documentation from current type's XML
+     *
+     * Current xpath is dumb
+     *
+     * @param string $name Name of member element
+     * @return string
+     */
+    public function getMemberDocumentation($name)
+    {
+        $documentation = null;
+        $documentationNodes = $this->xpath('//s:element[@name=%s]/s:annotation/s:documentation', $name);
+        if ($documentationNodes->length > 0) {
+            return $documentationNodes->item(0)->nodeValue;
+        }
+        return null;
+    }
+
+    /**
      * Returns the lines of WSDL type.
      *
      * @return string[] The lines of the WSDL type.

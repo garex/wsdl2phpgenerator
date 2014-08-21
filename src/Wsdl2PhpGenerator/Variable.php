@@ -5,7 +5,7 @@
 namespace Wsdl2PhpGenerator;
 
 /**
- * Very stupid datatype to use instead of array
+ * Simple but effective datatype to use instead of array
  *
  * @package Wsdl2PhpGenerator
  * @author Fredrik Wallgren <fredrik.wallgren@gmail.com>
@@ -29,15 +29,21 @@ class Variable
     private $nillable;
 
     /**
+     * @var string Description
+     */
+    private $description;
+
+    /**
      * @param string $type
      * @param string $name
      * @param bool $nillable
      */
-    public function __construct($type, $name, $nillable)
+    public function __construct($type, $name, $nillable, $description = null)
     {
         $this->type = $type;
         $this->name = $name;
         $this->nillable = $nillable;
+        $this->description = $description;
     }
 
     /**
@@ -62,5 +68,13 @@ class Variable
     public function getNillable()
     {
         return $this->nillable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }
