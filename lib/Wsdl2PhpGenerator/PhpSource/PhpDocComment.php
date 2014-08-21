@@ -98,12 +98,12 @@ class PhpDocComment
 
         // TODO: Look over the generation and possible combinations
 
+        $description = '';
         if (strlen($this->description) > 0) {
-            $lines = explode(PHP_EOL, $this->description);
+            $lines = explode(PHP_EOL, trim($this->description));
             foreach ($lines as $line) {
-                $ret .= ' * ' . trim($line) . PHP_EOL;
+                $description .= ' * ' . trim($line) . PHP_EOL;
             }
-            $ret .= ' * ' . PHP_EOL;
         }
 
         if (count($this->params) > 0) {
@@ -133,6 +133,11 @@ class PhpDocComment
         if ($this->return != null) {
             $ret .= $this->return->getSource();
         }
+
+        if (!empty($description) && !empty($ret)) {
+            $ret = ' * ' . PHP_EOL . $ret;
+        }
+        $ret = $description . $ret;
 
         if (!empty($ret)) {
             $ret = PHP_EOL . '/**' . PHP_EOL . $ret . ' */' . PHP_EOL;
