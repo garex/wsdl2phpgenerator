@@ -20,6 +20,10 @@ abstract class DocumentedNode extends XmlNode
         $documentationNodes = $this->element->getElementsByTagName('documentation');
         if ($documentationNodes->length > 0) {
             $documentation = $documentationNodes->item(0)->nodeValue;
+            $innerPath = str_replace($this->element->getNodePath(), '', $documentationNodes->item(0)->getNodePath());
+            if (strstr($innerPath, 'complexType')) {
+                return null;
+            }
         }
         return $documentation;
     }
