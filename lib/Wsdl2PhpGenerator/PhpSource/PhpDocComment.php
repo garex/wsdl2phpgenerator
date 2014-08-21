@@ -100,7 +100,9 @@ class PhpDocComment
 
         $description = '';
         if (strlen($this->description) > 0) {
-            $lines = explode(PHP_EOL, trim($this->description));
+            $preDescription = trim($this->description);
+            $preDescription = preg_replace('/\s*[\r\n][\s]{4,}/', ' ', $preDescription);
+            $lines = explode(PHP_EOL, $preDescription);
             foreach ($lines as $line) {
                 $description .= ' * ' . trim($line) . PHP_EOL;
             }
