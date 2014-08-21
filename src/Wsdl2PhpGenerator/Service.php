@@ -140,7 +140,17 @@ ${t}parent::__construct(\$wsdl, \$options);
         foreach ($this->operations as $operation) {
             $name = Validator::validateOperation($operation->getName());
 
-            $comment = new PhpDocComment($operation->getDescription());
+            $operationDescription = $operation->getDescription();
+            if (empty($operationDescription) && count($operation->getParams()) == 1) {
+                foreach ($operation->getParams() as $param => $hint) {
+                    if (isset($this->types[$hint]) && $this->types[$hint] instanceof ComplexType) {
+                        $operationDescription = $this->types[$hint]->getDescription();
+                    }
+                    break;
+                }
+            }
+
+            $comment = new PhpDocComment($operationDescription);
             $comment->setAccess(PhpDocElementFactory::getPublicAccess());
             $comment->setReturn(PhpDocElementFactory::getReturn($operation->getReturns(), ''));
 
