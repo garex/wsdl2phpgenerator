@@ -94,16 +94,15 @@ class PhpDocComment
      */
     public function getSource()
     {
-        $ret = PHP_EOL . '/**' . PHP_EOL;
+        $ret = '';
 
         // TODO: Look over the generation and possible combinations
 
-        $lines = explode(PHP_EOL, $this->description);
-        foreach ($lines as $line) {
-            $ret .= ' * ' . trim($line) . PHP_EOL;
-        }
-
         if (strlen($this->description) > 0) {
+            $lines = explode(PHP_EOL, $this->description);
+            foreach ($lines as $line) {
+                $ret .= ' * ' . trim($line) . PHP_EOL;
+            }
             $ret .= ' * ' . PHP_EOL;
         }
 
@@ -127,13 +126,17 @@ class PhpDocComment
             $ret .= $this->author->getSource();
         }
         if ($this->access != null) {
-            $ret .= $this->access->getSource();
+            if ('public' != $this->access->getDataType()) {
+                $ret .= $this->access->getSource();
+            }
         }
         if ($this->return != null) {
             $ret .= $this->return->getSource();
         }
 
-        $ret .= ' */' . PHP_EOL;
+        if (!empty($ret)) {
+            $ret = PHP_EOL . '/**' . PHP_EOL . $ret . ' */' . PHP_EOL;
+        }
 
         return $ret;
     }

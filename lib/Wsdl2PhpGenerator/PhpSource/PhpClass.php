@@ -98,6 +98,7 @@ class PhpClass extends PhpElement
         $this->variables = array();
         $this->functions = array();
         $this->indentionStr = '    '; // Use 4 spaces as indention, as requested by PSR-2
+        $this->indentionStr = "\t";
     }
 
     /**
@@ -133,7 +134,7 @@ class PhpClass extends PhpElement
             $ret .= ' extends ' . $this->extends;
         }
 
-        $ret .= PHP_EOL . '{' . PHP_EOL;
+        $ret .= ' {' . PHP_EOL;
 
         if (isset($this->default)) {
             $ret .= $this->getIndentionStr() . 'const __default = ' . $this->default . ';' . PHP_EOL;

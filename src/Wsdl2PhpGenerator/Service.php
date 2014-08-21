@@ -103,14 +103,16 @@ class Service
         $comment->addParam(PhpDocElementFactory::getParam('string', 'wsdl', 'The wsdl file to use'));
         $comment->setAccess(PhpDocElementFactory::getPublicAccess());
 
-        $source = '  foreach (self::$classmap as $key => $value) {
-    if (!isset($options[\'classmap\'][$key])) {
-      $options[\'classmap\'][$key] = $value;
-    }
-  }
-  ' . $this->generateServiceOptions() . '
-  parent::__construct($wsdl, $options);' . PHP_EOL;
-
+        $t = $this->class->getIndentionStr();
+        $source = "
+${t}foreach (self::\$classmap as \$key => \$value) {
+${t}${t}if (!isset(\$options['classmap'][\$key])) {
+${t}${t}${t}\$options['classmap'][\$key] = \$value;
+${t}${t}}
+${t}}
+${t}" . $this->generateServiceOptions() . "
+${t}parent::__construct(\$wsdl, \$options);
+";
         $function = new PhpFunction('public', '__construct', 'array $options = array(), $wsdl = \'' . $this->config->getInputFile() . '\'', $source, $comment);
 
         // Add the constructor
@@ -125,11 +127,10 @@ class Service
         $init = 'array(' . PHP_EOL;
         foreach ($this->types as $type) {
             if ($type instanceof ComplexType) {
-                $init .= "  '" . $type->getIdentifier() . "' => '" . $this->config->getNamespaceName() . "\\" . $type->getPhpIdentifier() . "'," . PHP_EOL;
+                $init .= "${t}'" . $type->getIdentifier() . "' => '" . $this->config->getNamespaceName() . "\\" . $type->getPhpIdentifier() . "'," . PHP_EOL;
             }
         }
-        $init = substr($init, 0, strrpos($init, ','));
-        $init .= ')';
+        $init .= ")";
         $var = new PhpVariable('private static', $name, $init, $comment);
 
         // Add the classmap variable
@@ -148,7 +149,7 @@ class Service
                 $comment->addParam(PhpDocElementFactory::getParam($arr['type'], $arr['name'], $arr['desc']));
             }
 
-            $source = '  return $this->__soapCall(\'' . $operation->getName() . '\', array(' . $operation->getParamStringNoTypeHints() . '));' . PHP_EOL;
+            $source = $t . 'return $this->__soapCall(\'' . $operation->getName() . '\', array(' . $operation->getParamStringNoTypeHints() . '));' . PHP_EOL;
 
             $paramStr = $operation->getParamString($this->types);
 
