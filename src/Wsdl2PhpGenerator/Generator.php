@@ -124,6 +124,7 @@ class Generator implements GeneratorInterface
 
         $types = $this->wsdl->getTypes();
 
+        /* @var TypeNode $typeNode */
         foreach ($types as $typeNode) {
             if ($typeNode->isArray()) {
                 // skip arrays
@@ -135,6 +136,7 @@ class Generator implements GeneratorInterface
             if ($typeNode->isComplex()) {
                 $type = new ComplexType($this->config, $typeNode->getName());
                 $this->log('Loading type ' . $type->getPhpIdentifier());
+                $type->setDescription($typeNode->getDocumentation());
 
                 foreach ($typeNode->getParts() as $name => $typeName) {
                     $type->addMember($typeName, $name, $typeNode->isElementNillable($name));

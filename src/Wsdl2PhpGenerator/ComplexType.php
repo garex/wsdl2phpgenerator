@@ -21,6 +21,12 @@ use Wsdl2PhpGenerator\PhpSource\PhpVariable;
  */
 class ComplexType extends Type
 {
+
+    /**
+     * @var string A description of the type
+     */
+    private $description;
+
     /**
      * Base type that the type extends
      *
@@ -62,7 +68,8 @@ class ComplexType extends Type
         $class = new PhpClass(
             $this->phpIdentifier,
             $this->config->getClassExists(),
-            $this->baseType !== null ? $this->baseType->getPhpIdentifier() : ''
+            $this->baseType !== null ? $this->baseType->getPhpIdentifier() : '',
+            new PhpDocComment($this->description)
         );
 
         // Add the base class as a dependency. Otherwise we risk referencing an undefined class.
@@ -141,6 +148,16 @@ class ComplexType extends Type
         }
 
         $this->class = $class;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
     /**

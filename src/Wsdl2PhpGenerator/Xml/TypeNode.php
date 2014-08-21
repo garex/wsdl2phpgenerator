@@ -6,7 +6,7 @@ namespace Wsdl2PhpGenerator\Xml;
 /**
  * An XML node which represents a specific type of element used when interacting with a SOAP service.
  */
-class TypeNode extends XmlNode
+class TypeNode extends DocumentedNode
 {
 
     /**
