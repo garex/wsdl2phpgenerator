@@ -89,6 +89,9 @@ abstract class XmlNode
     protected function xpath($query, $args = null)
     {
         $xpath = new DOMXPath($this->document);
+        if (!$this->document->isSameNode($this->element->ownerDocument)) {
+            $xpath = new DOMXPath($this->element->ownerDocument);
+        }
         // Preregister namespaces.
         $xpath->registerNamespace('wsdl', self::WSDL_NS);
         $xpath->registerNamespace('s', self::SCHEMA_NS);
