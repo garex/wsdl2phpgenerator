@@ -208,10 +208,21 @@ class TypeNode extends DocumentedNode
     public function getMemberDocumentation($name)
     {
         $documentation = null;
-        $documentationNodes = $this->xpath('//s:element[@name=%s]/s:annotation/s:documentation', $name);
+        $documentationNodes = $this->xpath('//*[@name=%s]//s:element[@name=%s]/s:annotation/s:documentation', $this->getName(), $name);
         if ($documentationNodes->length > 0) {
             return $documentationNodes->item(0)->nodeValue;
         }
+
+        $nodesWithRef = $this->xpath('//*[@name=%s]//s:element[@ref=%s]/@ref', $this->getName(), $name);
+        if ($nodesWithRef->length > 0) {
+            $ref = $nodesWithRef->item(0)->nodeValue;
+            $documentationNodes = $this->xpath('//s:element[@name=%s]/s:annotation/s:documentation', $ref);
+            if ($documentationNodes->length > 0) {
+                return $documentationNodes->item(0)->nodeValue;
+            }
+
+        }
+
         return null;
     }
 
